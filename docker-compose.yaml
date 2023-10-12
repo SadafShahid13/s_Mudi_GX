@@ -1,0 +1,40 @@
+version: "3.9"
+name: ad-iq
+services:
+  postgres:
+    user: root
+    restart: unless-stopped
+    container_name: ad-iq-postgres
+    ports:
+      - target: 5432
+        published: 5432
+    image: timescale/timescaledb-ha:pg15-all
+    environment:
+      POSTGRES_DB: adiq
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD:-root}"
+    volumes:
+      - ./_DATA/postgres-ha:/home/postgres/pgdata/data:rw
+
+  core:
+    container_name: ad-iq-core
+    working_dir: /app
+    volumes:
+      - ./:/app
+    command: pnpm dev
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "12003-12005:12003-12005"
+    environment:
+      PORT: 12003
+      MONGO_URL: mongodb://mongo:27017/?directConnection=true
+      REDIS_URL: "redis://default:${REDIS_PASSWORD:-root}@redis:6379"
+      PGHOST: postgres
+      PGPORT: 5432
+      PGUSER: postgres
+      PGPASSWORD: "${POSTGRES_PASSWORD:-root}"
+      PGDATABASE: adiq
+      DATABASE_URL: "postgres://postgres:${POSTGRES_PASSWORD:-root}@postgres:5432/adiq"
+      ROOT_USER_PASSWORD: "${ROOT_USER_PASSWORD:-root}"

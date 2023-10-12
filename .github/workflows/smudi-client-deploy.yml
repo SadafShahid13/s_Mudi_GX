@@ -1,0 +1,28 @@
+name: Cloudflare Client Continuous Deployment
+
+on:
+  push:
+    branches:
+      - production
+    paths:
+      - apps/client-web/**/*
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - run: npm install -g pnpm
+      - run: npm install -g turbo
+      - run: pnpm install
+      - run: pnpm run build
+      - name: Publish to Cloudflare Pages
+        uses: cloudflare/pages-action@v1
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+          projectName: smudi-client-web
+          directory: "./apps/client-web/dist"

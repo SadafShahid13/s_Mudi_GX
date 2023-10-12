@@ -1,0 +1,30 @@
+version: "3"
+services:
+  postgres:
+    user: root
+    container_name: adiqng-postgres
+    ports:
+      - target: 5432
+        published: 5432
+    image: timescale/timescaledb-ha:pg15-all
+    environment:
+      POSTGRES_DB: adiq
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+    volumes:
+      - ./infra/postgres/TMP-WD/:/wd/
+      - ./_DATA/postgres-ha:/home/postgres/pgdata/data:rw
+
+  metabase-postgres:
+    user: root
+    container_name: adiqng-metabase-postgres
+    ports:
+      - target: 5432
+        published: 32975
+    image: timescale/timescaledb-ha:pg15-all
+    environment:
+      POSTGRES_DB: metabase
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: "${METABASE_POSTGRES_PASSWORD:-root}"
+    volumes:
+      - ./_DATA/metabase-postgres-ha:/home/postgres/pgdata/data:rw

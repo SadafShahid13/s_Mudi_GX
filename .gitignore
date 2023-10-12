@@ -1,0 +1,10 @@
+/_DATA
+/.orc.lock
+/_ENV
+/.env
+/node_modules
+/.idea/dataSources/
+/.idea/workspace.xml
+*.turbo*
+/dist
+*.log
