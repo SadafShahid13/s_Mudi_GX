@@ -9,31 +9,15 @@ services:
         published: 32974
     image: timescale/timescaledb-ha:pg15-all
     environment:
-      POSTGRES_DB: adiq
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD:-root}"
+      POSTGRES_DB: sMudi_GXDB
+      POSTGRES_USER: sMudi_GXU
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD:-sMudi_GXP}"
     volumes:
       - ./_DATA/postgres-ha:/home/postgres/pgdata/data:rw
     networks:
-      - adiq
+      - smudi
 
-  metabase-postgres:
-    user: root
-    restart: unless-stopped
-    container_name: metabase-postgres
-    ports:
-      - target: 5432
-        published: 32975
-    image: timescale/timescaledb-ha:pg15-all
-    environment:
-      POSTGRES_DB: metabase
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: "${METABASE_POSTGRES_PASSWORD:-root}"
-    volumes:
-      - ./_DATA/metabase-postgres-ha:/home/postgres/pgdata/data:rw
-    networks:
-      - adiq
 networks:
   adiq:
-    name: adiq
+    name: smudi
     external: true
