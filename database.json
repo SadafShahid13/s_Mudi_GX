@@ -1,0 +1,11 @@
+{
+  "dev": {
+    "host": "localhost",
+    "port": 5432,
+    "database": "sMudi_GXDB",
+    "user": "sMudi_GXU",
+    "password": "sMudi_GXP",
+    "migrationsDir": "migrations",
+    "schema": "public"
+  }
+}

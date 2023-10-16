@@ -1,9 +1,14 @@
 import { router } from "../../index";
+import { getClientProcedure } from "./get";
+import { createClientProcedure } from "./create";
+import { updateClientProcedure } from "./update";
+import { deleteClientProcedure } from "./delete";
+import { listClientProcedure } from "./list";
 
 export const clientsRouter = router({
-  //   list: clientsListProcedure,
-  //   get: clientsGetProcedure,
-  //   create: clientsCreateProcedure,
-  //   update: clientsUpdateProcedure,
-  //   delete: clientsDeleteProcedure,
+  list: listClientProcedure,
+  get: getClientProcedure,
+  create: createClientProcedure,
+  update: updateClientProcedure,
+  delete: deleteClientProcedure,
 });

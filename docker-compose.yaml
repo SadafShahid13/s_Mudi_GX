@@ -1,40 +1,15 @@
 version: "3.9"
-name: ad-iq
 services:
   postgres:
-    user: root
-    restart: unless-stopped
-    container_name: ad-iq-postgres
-    ports:
-      - target: 5432
-        published: 5432
-    image: timescale/timescaledb-ha:pg15-all
+    image: postgres:latest
+    container_name: my_postgres
     environment:
-      POSTGRES_DB: adiq
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD:-root}"
+      POSTGRES_DB: "sMudi_GXDB" # Replace with your desired database name
+      POSTGRES_USER: "sMudi_GXU" # Replace with your desired username
+      POSTGRES_PASSWORD: "sMudi_GXP" # Replace with your desired password
+    ports:
+      - "5432:5432" # Map the PostgreSQL default port
     volumes:
-      - ./_DATA/postgres-ha:/home/postgres/pgdata/data:rw
+      - ./pg_data:/var/lib/postgresql/data # Store data persistently
 
-  core:
-    container_name: ad-iq-core
-    working_dir: /app
-    volumes:
-      - ./:/app
-    command: pnpm dev
-    build:
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - "12003-12005:12003-12005"
-    environment:
-      PORT: 12003
-      MONGO_URL: mongodb://mongo:27017/?directConnection=true
-      REDIS_URL: "redis://default:${REDIS_PASSWORD:-root}@redis:6379"
-      PGHOST: postgres
-      PGPORT: 5432
-      PGUSER: postgres
-      PGPASSWORD: "${POSTGRES_PASSWORD:-root}"
-      PGDATABASE: adiq
-      DATABASE_URL: "postgres://postgres:${POSTGRES_PASSWORD:-root}@postgres:5432/adiq"
-      ROOT_USER_PASSWORD: "${ROOT_USER_PASSWORD:-root}"
+# Add any other services or configurations as needed

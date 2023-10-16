@@ -7,7 +7,7 @@ const clientSchema = z.object({
   Name: z.string(),
 });
 
-export const clientListProcedure = authenticatedProcedure
+export const listClientProcedure = authenticatedProcedure
   .output(
     z.object({
       clients: z.array(
@@ -45,21 +45,7 @@ async function queryDatabase(
     return {
       rows: mockClientData,
       rowCount: mockClientData.length,
-      // ... add any other necessary properties based on the QueryResult type
     };
   }
-
-  // Handle other queries or throw an error if an unexpected query is passed
   throw new Error(`Unexpected query: ${sql}`);
 }
-
-async function testQueryDatabase() {
-  const result = await queryDatabase("SELECT id, Name FROM clients");
-  console.log(result.rows); // Should print the mockClientData
-  console.assert(
-    result.rowCount === mockClientData.length,
-    "Row count mismatch!"
-  );
-}
-
-testQueryDatabase();

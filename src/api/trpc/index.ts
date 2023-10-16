@@ -1,9 +1,6 @@
 import { initTRPC, TRPCError } from "@trpc/server";
 import { SuperJSON } from "superjson";
-import { Pool } from "pg";
-import type { Context } from "./context.ts";
-
-const pool = new Pool({ connectionString: "your_connection_string" });
+import type { Context } from "./context";
 
 const t = initTRPC.context<Context>().create({
   transformer: SuperJSON,
