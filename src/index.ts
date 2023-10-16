@@ -1,6 +1,6 @@
 import { initTRPC, TRPCError } from "@trpc/server";
 import { SuperJSON } from "superjson";
-import type { Context } from "./context";
+import { type Context } from "./context";
 
 const t = initTRPC.context<Context>().create({
   transformer: SuperJSON,
@@ -32,10 +32,30 @@ export class SpecificError extends TRPCError {
   }
 }
 
-const enforceAuthentication = middleware(async (opts) => {
+const isAdmin = middleware(async (opts) => {
   const { ctx } = opts;
 
-  if (!ctx.auth.isAuthenticated) {
+  if (!ctx.auth.isAuthenticated && !ctx.auth.isAdmin) {
+    throw new SpecificError({
+      code: "UNAUTHORIZED",
+      ui: "needs-authentication",
+    });
+  }
+
+  const auth = ctx.auth;
+
+  return opts.next({
+    ctx: {
+      ...ctx,
+      auth: auth,
+    },
+  });
+});
+
+const isUser = middleware(async (opts) => {
+  const { ctx } = opts;
+
+  if (!ctx.auth.isAuthenticated && ctx.auth.isAdmin) {
     throw new SpecificError({
       code: "UNAUTHORIZED",
       ui: "needs-authentication",
@@ -54,6 +74,5 @@ const enforceAuthentication = middleware(async (opts) => {
 
 export const publicProcedure = t.procedure;
 
-export const authenticatedProcedure = publicProcedure.use(
-  enforceAuthentication
-);
+export const adminProcedure = publicProcedure.use(isAdmin);
+export const userProcedure = publicProcedure.use(isUser);

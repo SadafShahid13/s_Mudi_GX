@@ -1,12 +1,12 @@
 {
   "include": [
     "src/**/*.ts",
-    "src/api/trpc/context.ts",
-    "src/api/trpc/procedures/contracts/index.ts",
-    "src/api/trpc/procedures/clients/index.ts",
-    "src/api/trpc/procedures/clients/list.ts",
-    "src/api/trpc/index.ts",
-    "src/api/trpc/router.ts"
+    "src/context.ts",
+    "src/routers/procedures/contracts/index.ts",
+    "src/routers/procedures/clients/index.ts",
+    "src/routers/procedures/clients/list.ts",
+    "src/index.ts",
+    "src/router.ts"
   ],
   "exclude": ["node_modules"],
   "compilerOptions": {

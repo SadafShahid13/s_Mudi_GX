@@ -1,17 +1,13 @@
 import { inferAsyncReturnType } from "@trpc/server";
 import * as trpcExpress from "@trpc/server/adapters/express";
-import { pool } from "../../../db";
+import { pool } from "../db";
 import { returnOf } from "scope-utilities";
 
-export enum UserRole {
-  Admin = "Admin",
-  User = "User",
-}
 export type Context = {
   db: typeof pool;
   auth: {
     isAuthenticated: boolean;
-    role?: UserRole;
+    isAdmin?: boolean;
   };
 };
 
@@ -25,13 +21,17 @@ export async function createContext({
       }
     | {
         isAuthenticated: true;
-        role: UserRole;
+        isAdmin: true;
+      }
+    | {
+        isAuthenticated: true;
+        isAdmin: false;
       } = await returnOf(async () => {
     if ("User") {
       try {
         return {
           isAuthenticated: true,
-          role: UserRole.User,
+          isAdmin: false,
         };
       } catch (error) {
         return {
@@ -42,7 +42,7 @@ export async function createContext({
       try {
         return {
           isAuthenticated: true,
-          role: UserRole.Admin,
+          isAdmin: true,
         };
       } catch (error) {
         return {

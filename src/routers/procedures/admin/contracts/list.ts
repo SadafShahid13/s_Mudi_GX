@@ -1,4 +1,4 @@
-import { authenticatedProcedure } from "../../index";
+import { adminProcedure } from "../../../../index";
 import { z } from "zod";
 import _ from "lodash";
 
@@ -24,26 +24,12 @@ const mockContractData = [
   // ... more sample contracts
 ];
 
-export const updateContractProcedure = authenticatedProcedure
-  .input(
+export const listClientProcedure = adminProcedure
+  .output(
     z.object({
-      id: z.number(),
-      start_at: z.string(),
-      end_at: z.string(),
-      price_sold_at: z.number(),
+      contracts: z.array(contractSchema),
     })
   )
-  .output(contractSchema)
-  .query(async (opts) => {
-    const { input } = opts;
-    const contract = mockContractData.find(
-      (contract) => contract.id === input.id
-    );
-
-    if (!contract) {
-      throw new Error(`Contract with id ${input.id} not found.`);
-    }
-
-    Object.assign(contract, input);
-    return contract;
+  .query(async () => {
+    return { contracts: mockContractData };
   });

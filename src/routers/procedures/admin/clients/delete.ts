@@ -1,4 +1,4 @@
-import { authenticatedProcedure } from "../../index";
+import { adminProcedure } from "../../../../index";
 import { z } from "zod";
 import _ from "lodash";
 
@@ -13,22 +13,27 @@ const clientSchema = z.object({
   Name: z.string(),
 });
 
-export const updateClientProcedure = authenticatedProcedure
+export const deleteClientProcedure = adminProcedure
   .input(
     z.object({
       id: z.number(),
-      Name: z.string(),
     })
   )
-  .output(clientSchema)
+  .output(
+    z.object({
+      success: z.boolean(),
+    })
+  )
   .query(async (opts) => {
     const { input } = opts;
-    const client = mockClientData.find((client) => client.id === input.id);
+    const clientIndex = mockClientData.findIndex(
+      (client) => client.id === input.id
+    );
 
-    if (!client) {
+    if (clientIndex === -1) {
       throw new Error(`Client with id ${input.id} not found.`);
     }
 
-    client.Name = input.Name;
-    return client;
+    mockClientData.splice(clientIndex, 1);
+    return { success: true };
   });

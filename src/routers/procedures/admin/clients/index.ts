@@ -1,4 +1,4 @@
-import { router } from "../../index";
+import { router } from "../../../../index";
 import { getClientProcedure } from "./get";
 import { createClientProcedure } from "./create";
 import { updateClientProcedure } from "./update";

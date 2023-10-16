@@ -1,4 +1,4 @@
-import { authenticatedProcedure } from "../../index";
+import { adminProcedure } from "../../../../index";
 import { z } from "zod";
 import _ from "lodash";
 
@@ -7,7 +7,7 @@ const clientSchema = z.object({
   Name: z.string(),
 });
 
-export const getClientProcedure = authenticatedProcedure
+export const getClientProcedure = adminProcedure
   .input(
     z.object({
       id: z.number(),
